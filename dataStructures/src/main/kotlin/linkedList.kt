@@ -15,29 +15,29 @@ data class Node <T>(val value: T, var next: Node<T>? = null ){
 
 }
 
-class LinkedList<T>{
-    var head : Node<T>? = null
-    var tail : Node<T>? = null
-    var size  = 0
+class LinkedList<T> {
+    var head: Node<T>? = null
+    var tail: Node<T>? = null
+    var size = 0
 
 
-    fun isEmpty(): Boolean{
+    fun isEmpty(): Boolean {
         return size == 0
     }
 
     override fun toString(): String {
-        return if (isEmpty()){
+        return if (isEmpty()) {
             "linked list is empty"
-        }else{
+        } else {
             head.toString()
         }
     }
 
 
-    fun push(value: T): LinkedList<T>{
+    fun push(value: T): LinkedList<T> {
         head = Node(value, next = head)
 
-        if (tail == null){
+        if (tail == null) {
             tail = head
         }
         size++
@@ -45,43 +45,63 @@ class LinkedList<T>{
         return this
     }
 
-    fun append(value : T): LinkedList<T>{
-        if(isEmpty()){
+    fun append(value: T): LinkedList<T> {
+        if (isEmpty()) {
             push(value)
             return this
         }
         tail?.next = Node(value)
         tail = tail?.next
-        size ++
+        size++
         return this
     }
 
-    fun insertAt(index: Int, value: T): Node<T>{
+    fun insertAt(index: Int, value: T) {
         var currentIndex = 0
         var currentNode = head
 
-        while(currentNode != null && currentIndex < index){
+        while (currentNode != null && currentIndex < index) {
             currentNode = currentNode.next
             currentIndex++
         }
         var newNode = Node.createNode(value)
 
 
-        if(currentNode == tail){
+        if (currentNode == tail) {
             append(value)
-            return tail!!
+            return
         }
 
         newNode.next = currentNode?.next
         currentNode?.next = newNode
 
         size++
-        return Node(value)
+    }
+
+    fun pop(): T? {
+        var result: T? = null
+
+        if (head == null && tail == null) {
+            println("list is empty")
+            return head?.value
+        }
+
+        if (!isEmpty()) {
+
+            size--
+            head = head?.next
+             result = head?.value
+            if (isEmpty()) {
+                tail = null
+            }
+
+        }
+        return result
 
     }
 
-}
 
+}
 
 
 fun main(){
@@ -150,11 +170,24 @@ fun main(){
         list.push(node3)*/
 
         for (i in 1..3){
-            list.insertAt(1,Node.createNode(4*i))
+            list.insertAt(0,Node.createNode(4*i))
         }
 
         println(list)
 
+    }
+
+    "pop" example{
+        val list = LinkedList<Node<Int>>()
+        val node1 = Node<Int>(1)
+        val node2 = Node<Int>(2)
+        val node3 = Node<Int>(3)
+        list.push(node1).push(node2).push(node3)
+        println(list)
+        println(list.pop()?.value)
+        list.pop()
+        list.pop()
+        println(list)
     }
 
 

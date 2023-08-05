@@ -1,3 +1,4 @@
+import java.lang.IndexOutOfBoundsException
 
 data class Node <T>(val value: T, var next: Node<T>? = null ){
     override fun toString(): String {
@@ -15,14 +16,20 @@ data class Node <T>(val value: T, var next: Node<T>? = null ){
 
 }
 
-class LinkedList<T> {
+class LinkedList<T> : Iterable<T>{
     private var head: Node<T>? = null
     private var tail: Node<T>? = null
-    private var size = 0
+    var size = 0
+
+
 
 
     private fun isEmpty(): Boolean {
         return size == 0
+    }
+
+    override fun iterator(): Iterator<T> {
+     return LinkedListIterator(this)
     }
 
     override fun toString(): String {
@@ -134,16 +141,20 @@ class LinkedList<T> {
 
     }
 
+
+
     fun removeAt(index: Int) {
         var currentIndex: Int = 0
         var currentNode: Node<T>? = head
         var prevNode: Node<T>? = null
         if (isEmpty()) {
             pop()
+            return
         }
         if (head?.next == null && index == 0) {
             pop()
             size--
+            return
         }
 
         currentNode = head
@@ -156,12 +167,54 @@ class LinkedList<T> {
         if (prevNode?.next == tail) {
                 tail  = prevNode
                 tail?.next = null
+                size--
+                return
+
         }
 
         currentNode?.next = currentNode?.next?.next
-
+        size--
+        return
 
     }
+
+    fun nodeAt(index: Int): Node<T>? {
+
+        var currentNode = head
+        var currentIndex = 0
+
+        while (currentNode != null && currentIndex < index) {
+            currentNode = currentNode.next
+            currentIndex++
+        }
+        return currentNode
+    }
+
+}
+
+class LinkedListIterator<T>(private val linkedList: LinkedList<T>): Iterator<T>{
+
+    private var index = 0
+    private var lastNode: Node<T>? = null
+    override fun hasNext(): Boolean {
+        return linkedList.size > index
+    }
+
+    override fun next(): T {
+
+
+        if(index >= linkedList.size) throw  IndexOutOfBoundsException()
+
+        lastNode = if (index == 0) {
+            linkedList.nodeAt(0)
+        } else {
+            lastNode?.next
+        }
+        index++
+        println(index)
+        return (lastNode?.value!!)
+    }
+
 }
 
 
@@ -271,6 +324,18 @@ fun main(){
         list.push(node1).push(node2).push(node3)
         list.removeAt(0)
         println(list)
+    }
+
+    "iterating" example {
+        val list = LinkedList<Node<Int>>()
+        val node1 = Node<Int>(1)
+        val node2 = Node<Int>(2)
+        val node3 = Node<Int>(3)
+        list.push(node1).push(node2).push(node3)
+
+        for(item in list){
+            println(item.value)
+        }
     }
 
 

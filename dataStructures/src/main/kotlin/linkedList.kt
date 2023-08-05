@@ -16,12 +16,12 @@ data class Node <T>(val value: T, var next: Node<T>? = null ){
 }
 
 class LinkedList<T> {
-    var head: Node<T>? = null
-    var tail: Node<T>? = null
-    var size = 0
+    private var head: Node<T>? = null
+    private var tail: Node<T>? = null
+    private var size = 0
 
 
-    fun isEmpty(): Boolean {
+    private fun isEmpty(): Boolean {
         return size == 0
     }
 
@@ -90,7 +90,7 @@ class LinkedList<T> {
 
             size--
             head = head?.next
-             result = head?.value
+            result = head?.value
             if (isEmpty()) {
                 tail = null
             }
@@ -100,7 +100,68 @@ class LinkedList<T> {
 
     }
 
+    fun removeLast(): T? {
+        var tracker: Node<T>? = null
+        var result: T? = null
 
+        if (isEmpty()) {
+            pop()
+            return null
+        }
+        if (head?.next == null) {
+            size--
+            result = pop()
+            return result
+        }
+
+        tracker = head
+
+        while (true) {
+            if (tracker?.next == tail) {
+
+                result = tail?.value
+
+                tail = tracker
+
+                tail?.next = null
+
+                size--
+
+                return result
+            }
+            tracker = tracker?.next
+        }
+
+    }
+
+    fun removeAt(index: Int) {
+        var currentIndex: Int = 0
+        var currentNode: Node<T>? = head
+        var prevNode: Node<T>? = null
+        if (isEmpty()) {
+            pop()
+        }
+        if (head?.next == null && index == 0) {
+            pop()
+            size--
+        }
+
+        currentNode = head
+
+        while (currentNode != null && currentIndex < index) {
+            prevNode = currentNode
+            currentNode = currentNode.next
+            currentIndex++
+        }
+        if (prevNode?.next == tail) {
+                tail  = prevNode
+                tail?.next = null
+        }
+
+        currentNode?.next = currentNode?.next?.next
+
+
+    }
 }
 
 
@@ -184,9 +245,31 @@ fun main(){
         val node3 = Node<Int>(3)
         list.push(node1).push(node2).push(node3)
         println(list)
-        println(list.pop()?.value)
         list.pop()
         list.pop()
+        println(list)
+    }
+
+    "removeLast" example{
+        val list = LinkedList<Node<Int>>()
+        val node1 = Node<Int>(1)
+        val node2 = Node<Int>(2)
+        val node3 = Node<Int>(3)
+        list.push(node1).push(node2).push(node3)
+        println(list)
+        list.removeLast()
+        list.removeLast()
+
+        println(list)
+    }
+
+    "removeAt" example{
+        val list = LinkedList<Node<Int>>()
+        val node1 = Node<Int>(1)
+        val node2 = Node<Int>(2)
+        val node3 = Node<Int>(3)
+        list.push(node1).push(node2).push(node3)
+        list.removeAt(0)
         println(list)
     }
 

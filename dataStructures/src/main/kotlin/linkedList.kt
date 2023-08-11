@@ -128,7 +128,7 @@ class LinkedList<T> : Collection<T> , MutableIterable<T>,MutableCollection<T>{
             push(value)
             return this
         }
-        tail?.next = Node(value)
+        tail?.next = Node(value = value)
         tail = tail?.next
         size++
         return this
@@ -336,52 +336,39 @@ fun main() {
 
     "push" example {
 
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
 
-        var list = LinkedList<Node<Int>>()
+
+        var list = LinkedList<Int>()
         println(list)
-        list.push(node1)
-        list.push(node2)
-        list.push(node3)
+        list.push(1)
+        list.push(2)
+        list.push(3)
         println(list)
     }
 
     "fluent interface push" example {
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-        var list = LinkedList<Node<Int>>()
+
+        var list = LinkedList<Int>()
         println(list)
-        list.push(node1).push(node2).push(node3)
+        list.push(1).push(2).push(3)
 
         println(list)
     }
 
     "append" example {
-        val node1 = Node("one")
-        val node2 = Node("two")
-        val node3 = Node("three")
 
-        var linkedList = LinkedList<Node<String>>()
-        linkedList.append(node1).append(node2).append(node3)
+
+        var linkedList = LinkedList<String>()
+        linkedList.append("one").append("two").append("three")
+        val newValue =  linkedList.pop()
         println(linkedList)
     }
 
     "inserting certain position" example {
-        var list = LinkedList<Node<Int>>()
-
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-
-        /*list.push(node1)
-        list.push(node2)
-        list.push(node3)*/
+        var list = LinkedList<Int>()
 
         for (i in 1..3) {
-            list.insertAt(0, Node.createNode(4 * i))
+            list.insertAt(0, 4 * i)
         }
 
         println(list)
@@ -389,11 +376,9 @@ fun main() {
     }
 
     "pop" example {
-        val list = LinkedList<Node<Int>>()
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-        list.push(node1).push(node2).push(node3)
+        val list = LinkedList<Int>()
+
+        list.push(1).push(2).push(3)
         println(list)
         list.pop()
         list.pop()
@@ -401,11 +386,9 @@ fun main() {
     }
 
     "removeLast" example {
-        val list = LinkedList<Node<Int>>()
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-        list.push(node1).push(node2).push(node3)
+        val list = LinkedList<Int>()
+
+        list.push(1).push(2).push(3)
         println(list)
         list.removeLast()
         list.removeLast()
@@ -414,45 +397,50 @@ fun main() {
     }
 
     "removeAt" example {
-        val list = LinkedList<Node<Int>>()
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-        list.push(node1).push(node2).push(node3)
+        val list = LinkedList<Int>()
+        list.push(1).push(2).push(3)
         list.removeAt(0)
         println(list)
     }
 
     "iterating" example {
-        val list = LinkedList<Node<Int>>()
-        val node1 = Node<Int>(1)
-        val node2 = Node<Int>(2)
-        val node3 = Node<Int>(3)
-        list.push(node1).push(node2).push(node3)
+        val list = LinkedList<Int>()
+
+        list.push(1).push(2).push(3)
 
         for (item in list) {
-            println(item.value)
+            println(item)
         }
 
         val iterator = list.iterator()
 
         while (iterator.hasNext()) {
             var element = iterator.next()
-            if (element.value % 3 == 0) {
+            if (element % 3 == 0) {
                 iterator.remove()
             }
         }
 
 
         for (element in iterator) {
-            if (element.value % 2 == 0) {
+            if (element % 2 == 0) {
                 iterator.remove()
             }
         }
 
         for (item in list) {
-            print(item.value)
+            print(item)
         }
+
+    }
+
+    "add" example{
+        val list: MutableCollection<Int> = LinkedList()
+        list.add(1)
+        list.add(2)
+        list.add(3)
+        list.add(4)
+        list.add(5)
 
     }
 

@@ -16,20 +16,91 @@ data class Node <T>(val value: T, var next: Node<T>? = null ){
 
 }
 
-class LinkedList<T> : Iterable<T>{
+class LinkedList<T> : Collection<T> , MutableIterable<T>,MutableCollection<T>{
     private var head: Node<T>? = null
     private var tail: Node<T>? = null
-    var size = 0
+    override var size: Int = 0
+        private set
+
+    override fun clear() {
+        head  = null
+        tail  = null
+        size  = 0
+    }
+
+    override fun addAll(elements: Collection<T>): Boolean {
+        for (item in elements){
+            append(item)
+        }
+        return true
+    }
+
+    override fun add(element: T): Boolean {
+       append(element)
+        return true
+    }
 
 
+    override fun containsAll(elements: Collection<T>): Boolean {
+        for(searched in elements){
+            if(!contains(searched)) return false
+        }
+        return true
+    }
+
+    override fun contains(element: T): Boolean {
+        for(item in this){
+            if (item == element){
+                return true
+            }
+        }
+        return false
+    }
 
 
-    private fun isEmpty(): Boolean {
+    override fun isEmpty(): Boolean {
         return size == 0
     }
 
-    override fun iterator(): Iterator<T> {
+
+
+    override fun iterator(): MutableIterator<T> {
+        println("burdayım")
      return LinkedListIterator(this)
+
+    }
+
+    override fun retainAll(elements: Collection<T>): Boolean {
+        var result = false
+        val iterator = this.iterator()
+        while(iterator.hasNext()){
+            val item = iterator.next()
+            if(!elements.contains(item)){
+                iterator.remove()
+                result = true
+            }
+        }
+        return true
+    }
+
+    override fun removeAll(elements: Collection<T>): Boolean {
+        var result = false
+        for(item in elements){
+            result = remove(item) || false
+        }
+        return result
+    }
+
+    override fun remove(element: T): Boolean {
+       val iterator = iterator()
+        while(iterator.hasNext()){
+            val item  = iterator.next()
+            if(item == element){
+                iterator.remove()
+                return true
+            }
+        }
+        return false
     }
 
     override fun toString(): String {
@@ -189,10 +260,21 @@ class LinkedList<T> : Iterable<T>{
         }
         return currentNode
     }
+    fun removeAfter(node: Node<T>): T? {
+        val result = node.next?.value
+        if (node.next == tail) {
+            tail = node
+        }
+        if (node.next != null) {
+            size--
+        }
+        node.next = node.next?.next
+        return result
+    }
 
 }
 
-class LinkedListIterator<T>(private val linkedList: LinkedList<T>): Iterator<T>{
+class LinkedListIterator<T>(private val linkedList: LinkedList<T>): MutableIterator<T>{
 
     private var index = 0
     private var lastNode: Node<T>? = null
@@ -211,14 +293,29 @@ class LinkedListIterator<T>(private val linkedList: LinkedList<T>): Iterator<T>{
             lastNode?.next
         }
         index++
-        println(index)
+
         return (lastNode?.value!!)
     }
 
-}
+
+        override fun remove() {
+
+            if (index == 1) {
+                linkedList.pop()
+            } else {
+                val prevNode = linkedList.nodeAt(index - 2) ?: return
+
+                linkedList.removeAfter(prevNode)
+                lastNode = prevNode
+            }
+            index--
+        }
+    }
 
 
-fun main(){
+
+
+fun main() {
 
     "creating and linking nodes" example {
         val node1 = Node<Int>(1)
@@ -237,7 +334,7 @@ fun main(){
         println(node1)
     }
 
-    "push" example{
+    "push" example {
 
         val node1 = Node<Int>(1)
         val node2 = Node<Int>(2)
@@ -251,7 +348,7 @@ fun main(){
         println(list)
     }
 
-    "fluent interface push" example{
+    "fluent interface push" example {
         val node1 = Node<Int>(1)
         val node2 = Node<Int>(2)
         val node3 = Node<Int>(3)
@@ -262,7 +359,7 @@ fun main(){
         println(list)
     }
 
-    "append" example{
+    "append" example {
         val node1 = Node("one")
         val node2 = Node("two")
         val node3 = Node("three")
@@ -283,15 +380,15 @@ fun main(){
         list.push(node2)
         list.push(node3)*/
 
-        for (i in 1..3){
-            list.insertAt(0,Node.createNode(4*i))
+        for (i in 1..3) {
+            list.insertAt(0, Node.createNode(4 * i))
         }
 
         println(list)
 
     }
 
-    "pop" example{
+    "pop" example {
         val list = LinkedList<Node<Int>>()
         val node1 = Node<Int>(1)
         val node2 = Node<Int>(2)
@@ -303,7 +400,7 @@ fun main(){
         println(list)
     }
 
-    "removeLast" example{
+    "removeLast" example {
         val list = LinkedList<Node<Int>>()
         val node1 = Node<Int>(1)
         val node2 = Node<Int>(2)
@@ -316,7 +413,7 @@ fun main(){
         println(list)
     }
 
-    "removeAt" example{
+    "removeAt" example {
         val list = LinkedList<Node<Int>>()
         val node1 = Node<Int>(1)
         val node2 = Node<Int>(2)
@@ -333,9 +430,30 @@ fun main(){
         val node3 = Node<Int>(3)
         list.push(node1).push(node2).push(node3)
 
-        for(item in list){
+        for (item in list) {
             println(item.value)
         }
+
+        val iterator = list.iterator()
+
+        while (iterator.hasNext()) {
+            var element = iterator.next()
+            if (element.value % 3 == 0) {
+                iterator.remove()
+            }
+        }
+
+
+        for (element in iterator) {
+            if (element.value % 2 == 0) {
+                iterator.remove()
+            }
+        }
+
+        for (item in list) {
+            print(item.value)
+        }
+
     }
 
 

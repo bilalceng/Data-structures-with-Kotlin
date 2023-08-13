@@ -272,6 +272,23 @@ class LinkedList<T> : Collection<T> , MutableIterable<T>,MutableCollection<T>{
         return result
     }
 
+   fun addInReverse(list: LinkedList<T> = LinkedList(), node: Node<T>){
+        var next = node.next
+        if (next != null){
+            addInReverse(list, next)
+        }
+         list.append(node.value)
+    }
+
+}
+
+fun <T> LinkedList<T>.reversed(): LinkedList<T>{
+    val result = LinkedList<T>()
+    var head = this.nodeAt(0)
+    if(head != null){
+        addInReverse(result, head)
+    }
+    return result
 }
 
 class LinkedListIterator<T>(private val linkedList: LinkedList<T>): MutableIterator<T>{
@@ -282,7 +299,7 @@ class LinkedListIterator<T>(private val linkedList: LinkedList<T>): MutableItera
         return linkedList.size > index
     }
 
-    override fun next(): T {
+    override fun next():T {
 
 
         if(index >= linkedList.size) throw  IndexOutOfBoundsException()
@@ -294,7 +311,7 @@ class LinkedListIterator<T>(private val linkedList: LinkedList<T>): MutableItera
         }
         index++
 
-        return (lastNode?.value!!)
+        return lastNode!!.value
     }
 
 
@@ -310,10 +327,40 @@ class LinkedListIterator<T>(private val linkedList: LinkedList<T>): MutableItera
             }
             index--
         }
+
+
     }
 
 
+fun <T> LinkedList<T>.printReverse(){
+    this.nodeAt(0)?.printReverse()
+}
 
+fun <T> Node<T>.printReverse(){
+    this.next?.printReverse()
+
+    if(this.next != null){
+        print(" -> ")
+    }
+    print(this.value.toString())
+}
+
+fun <T> LinkedList<T>.findMiddle(): Node<T>{
+    var slow = this.nodeAt(0)
+    var fast = this.nodeAt(0)
+
+    while(fast != null){
+        fast = fast.next
+        if(fast != null){
+            fast = fast.next
+            slow = slow?.next
+        }
+
+    }
+
+
+    return slow!!
+}
 
 fun main() {
 
@@ -361,7 +408,7 @@ fun main() {
         var linkedList = LinkedList<String>()
         linkedList.append("one").append("two").append("three")
         val newValue =  linkedList.pop()
-        println(linkedList)
+
     }
 
     "inserting certain position" example {
@@ -434,7 +481,7 @@ fun main() {
 
     }
 
-    "add" example{
+    "removing elements" example{
         val list: MutableCollection<Int> = LinkedList()
         list.add(1)
         list.add(2)
@@ -442,8 +489,81 @@ fun main() {
         list.add(4)
         list.add(5)
 
+        println(list)
+        list.remove(1)
+        println(list)
+
+    }
+    "retaining elements" example {
+        val list: MutableCollection<Int> = LinkedList()
+        list.add(3)
+        list.add(2)
+        list.add(1)
+        list.add(4)
+        list.add(5)
+        println(list)
+        list.retainAll(listOf(3, 4, 5))
+        println(list)
     }
 
+    "remove all elements" example {
+        val list: MutableCollection<Int> = LinkedList()
+        list.add(3)
+        list.add(2)
+        list.add(1)
+        list.add(4)
+        list.add(5)
+        println(list)
+        list.removeAll(listOf(3, 4, 5))
+        println(list)
+    }
+
+    "printing in reverse order" example {
+
+        val list = LinkedList<Int>()
+        list.add(1)
+        list.add(2)
+        list.add(3)
+        list.add(4)
+        list.add(5)
+        list.add(6)
+        list.add(7)
+        println(list)
+        list.printReverse()
+
+
+    }
+    "finding middle element" example {
+
+        val list = LinkedList<Int>()
+        list.add(1)
+        list.add(2)
+        list.add(3)
+        list.add(4)
+        list.add(5)
+        list.add(6)
+        list.add(7)
+        println(list)
+        println( list.findMiddle().value)
+
+
+    }
+
+    "reversing list" example {
+
+        val list = LinkedList<Int>()
+        list.add(1)
+        list.add(2)
+        list.add(3)
+        list.add(4)
+        list.add(5)
+        list.add(6)
+        list.add(7)
+        println(list)
+        println( list.reversed())
+
+
+    }
 
 }
 
@@ -451,3 +571,5 @@ private infix fun String.example(function: () -> Unit) {
     println("----example of $this----")
     function.invoke()
 }
+
+

@@ -567,7 +567,7 @@ fun main() {
 
 }
 
-private infix fun String.example(function: () -> Unit) {
+ infix fun String.example(function: () -> Unit) {
     println("----example of $this----")
     function.invoke()
 }

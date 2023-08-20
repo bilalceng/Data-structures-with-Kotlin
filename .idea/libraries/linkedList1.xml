@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="linkedList1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dataStructures/out/production/dataStructures/linkedList.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

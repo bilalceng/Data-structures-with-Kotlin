@@ -1,19 +1,71 @@
 class TreeNode<T>(var value: T){
 
-    val children = mutableListOf<TreeNode<T>>()
+    private val children = mutableListOf<TreeNode<T>>()
 
     fun add(child:TreeNode<T>): Boolean{
        return  children.add(child)
 
     }
 
-    fun forEachDeptFirst(visit: Visitor<T>){
+    fun forEachDeptFirst(visit: (TreeNode<T>) -> Unit){
         visit(this)
         children.forEach{
             it.forEachDeptFirst(visit)
         }
     }
-}
+
+    fun leveledTraversal(visit:(TreeNode<T>) -> Unit){
+        visit(this)
+        val queue = QueueImp<TreeNode<T>>()
+        children.forEach{
+            queue.enqueue(it)
+        }
+        var node = queue.dequeue()
+        while (node != null){
+            visit(node)
+            node.children.forEach {
+                queue.enqueue(it)
+            }
+            node = queue.dequeue()
+        }
+
+    }
+
+    fun search(value: T): TreeNode<T>?{
+        var result: TreeNode<T>? = null
+        leveledTraversal {
+            if(it.value == value){
+                result = it
+            }
+
+        }
+        return result
+    }
+
+
+    fun printEachLevel(){
+        val queue : QueueImp<TreeNode<T>> = QueueImp()
+        var levelElementCount  = 0
+        queue.enqueue(this)
+
+        while (queue.isEmpty.not()){
+            levelElementCount = queue.count
+
+            while (levelElementCount > 0){
+                var node = queue.dequeue()
+                node?.let { treeNode ->
+                    print(" " + treeNode.value + " ")
+                    treeNode.children.forEach {
+                        queue.enqueue(it)
+                    }
+                }?: break
+                levelElementCount--
+                }
+            println()
+            }
+        }
+    }
+
 
 fun makeBeverageTree(): TreeNode<String> {
 
@@ -48,12 +100,36 @@ fun makeBeverageTree(): TreeNode<String> {
     return tree
 }
 
-typealias Visitor<T> = (TreeNode<T>) -> Unit
+
+
+
+
 fun main(){
-    var tree = makeBeverageTree()
-    tree.forEachDeptFirst {
-        println("${it.value}")
+    "depth first traversal" example {
+        val tree = makeBeverageTree()
+        tree.forEachDeptFirst {
+            println(it.value)
+        }
     }
 
+    "level order traversal" example {
+        val tree = makeBeverageTree()
+        tree.leveledTraversal {
+            println(it.value)
+        }
+    }
+
+
+    "searching" example {
+        val tree = makeBeverageTree()
+        val result = tree.search("coffee")
+        println(result?.value)
+    }
+
+
+    "printing level by level" example {
+        val tree = makeBeverageTree()
+        tree.printEachLevel()
+    }
 
     }

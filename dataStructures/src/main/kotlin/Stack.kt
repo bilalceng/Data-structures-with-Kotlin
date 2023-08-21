@@ -1,7 +1,3 @@
-import java.util.*
-import javax.swing.text.Element
-
-
 interface Stack<T>{
     val count:Int
 

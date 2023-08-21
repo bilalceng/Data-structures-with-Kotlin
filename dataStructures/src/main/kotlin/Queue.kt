@@ -85,6 +85,30 @@ class QueueImp <T>(): Queue<T>{
 
 }
 
+
+fun <T> QueueImp<T>.sequenceFinder():T{
+
+    var person = this.dequeue()!!
+    this.enqueue(person)
+    return person
+
+
+}
+
+fun <T> QueueImp<T>.reverse(){
+    var stack = MyStack<T>()
+    var next = this.dequeue()
+    while(next != null){
+        stack.push(next)
+        next = this.dequeue()
+    }
+    var _next = stack.pop()
+    while (_next != null){
+        this.enqueue(_next)
+        _next = stack.pop()
+    }
+}
+
 fun main(){
 
     "enqueue an dequeue" example {
@@ -111,6 +135,31 @@ fun main(){
         queue.dequeue()
         queue.dequeue()
         queue.dequeue()
+        println(queue)
+    }
+
+    "next player" example {
+        val queue = QueueImp<String>()
+        queue.enqueue("John")
+        queue.enqueue("jack")
+        queue.enqueue("kevin")
+        queue.enqueue("shawn")
+        queue.enqueue("kelly")
+        println(queue)
+        var nextPlayer = queue.sequenceFinder()
+        println(nextPlayer)
+        println(queue)
+    }
+
+    "reversing queue using stack" example {
+        val queue = QueueImp<String>()
+        queue.enqueue("John")
+        queue.enqueue("jack")
+        queue.enqueue("kevin")
+        queue.enqueue("shawn")
+        queue.enqueue("kelly")
+        println(queue)
+        queue.reverse()
         println(queue)
     }
 

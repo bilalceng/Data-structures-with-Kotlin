@@ -1,7 +1,3 @@
-import kotlin.math.min
-
-
-
 /*
 // smallest to  biggest version.
 fun positiveIntegerSorting(list:List<Int>) {

@@ -53,6 +53,6 @@ fun positiveIntegerSorting(list:List<Int>) {
 
 
 }
-fun main(){
-    positiveIntegerSorting(listOf(2,1,3))
-}
+
+
+
